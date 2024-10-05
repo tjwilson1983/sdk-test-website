@@ -1,16 +1,39 @@
 (function () {
     console.log('SDK loaded successfully');
 
-    // Function to log 404 error data
+    // Function to send 404 data to the backend server
+    function send404DataToServer(data) {
+        fetch('https://burly-tundra-raclette.glitch.me/log-404', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            console.log('404 data sent successfully:', result);
+        })
+        .catch(error => {
+            console.error('Error sending 404 data:', error);
+        });
+    }
+
+    // Function to log and send 404 error data
     function log404Data(siteUrl, currentUrl, referrerUrl, userAgent, screenWidth, screenHeight, deviceType, timestamp) {
-        console.log("Base Website URL:", siteUrl);
-        console.log("URL that caused 404 error:", currentUrl);
-        console.log("Previous page URL (referrer):", referrerUrl);
-        console.log("User Agent (Browser Info):", userAgent);
-        console.log("Screen Width:", screenWidth);
-        console.log("Screen Height:", screenHeight);
-        console.log("Device Type:", deviceType);
-        console.log("Timestamp of Error:", timestamp);
+        const data = {
+            site_url: siteUrl,
+            current_url: currentUrl,
+            referrer_url: referrerUrl,
+            user_agent: userAgent,
+            screen_width: screenWidth,
+            screen_height: screenHeight,
+            device_type: deviceType,
+            timestamp: timestamp
+        };
+
+        console.log("Logging 404 data:", data);
+        send404DataToServer(data);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -19,8 +42,6 @@
         
         // Retrieve the previous page from sessionStorage
         const storedReferrer = sessionStorage.getItem('lastPage') || 'No referrer';
-        console.log("Stored referrer from sessionStorage:", storedReferrer);
-
         const userAgent = navigator.userAgent;   // Browser information
         const screenWidth = window.screen.width;  // Screen width
         const screenHeight = window.screen.height; // Screen height
@@ -32,12 +53,9 @@
 
         if (is404Page) {
             log404Data(siteUrl, currentUrl, storedReferrer, userAgent, screenWidth, screenHeight, deviceType, timestamp);
-        } else {
-            console.log("This is not a 404 page. No data logged.");
         }
 
         // Store the current URL in sessionStorage for the next page visit
-        console.log("Setting sessionStorage for lastPage:", currentUrl);
         sessionStorage.setItem('lastPage', currentUrl);
     });
 })();
