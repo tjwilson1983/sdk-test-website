@@ -16,7 +16,9 @@
     document.addEventListener('DOMContentLoaded', () => {
         const siteUrl = window.location.origin;  // Base site URL
         const currentUrl = window.location.href; // Current URL (404 URL)
-        const referrerUrl = document.referrer || 'No referrer'; // Previous page or 'No referrer'
+        
+        // Use sessionStorage to get the previous page if available
+        const storedReferrer = sessionStorage.getItem('lastPage') || 'No referrer';
         const userAgent = navigator.userAgent;   // Browser information
         const screenWidth = window.screen.width;  // Screen width
         const screenHeight = window.screen.height; // Screen height
@@ -27,9 +29,13 @@
         const is404Page = document.querySelector('meta[name="error-page"][content="404"]') !== null;
 
         if (is404Page) {
-            log404Data(siteUrl, currentUrl, referrerUrl, userAgent, screenWidth, screenHeight, deviceType, timestamp);
+            log404Data(siteUrl, currentUrl, storedReferrer, userAgent, screenWidth, screenHeight, deviceType, timestamp);
         } else {
             console.log("This is not a 404 page. No data logged.");
         }
+
+        // Store the current URL in sessionStorage for the next page visit
+        sessionStorage.setItem('lastPage', currentUrl);
     });
 })();
+
