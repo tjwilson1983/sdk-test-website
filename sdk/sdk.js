@@ -17,8 +17,10 @@
         const siteUrl = window.location.origin;  // Base site URL
         const currentUrl = window.location.href; // Current URL (404 URL)
         
-        // Use sessionStorage to get the previous page if available
+        // Retrieve the previous page from sessionStorage
         const storedReferrer = sessionStorage.getItem('lastPage') || 'No referrer';
+        console.log("Stored referrer from sessionStorage:", storedReferrer);
+
         const userAgent = navigator.userAgent;   // Browser information
         const screenWidth = window.screen.width;  // Screen width
         const screenHeight = window.screen.height; // Screen height
@@ -35,7 +37,9 @@
         }
 
         // Store the current URL in sessionStorage for the next page visit
+        console.log("Setting sessionStorage for lastPage:", currentUrl);
         sessionStorage.setItem('lastPage', currentUrl);
     });
 })();
+
 
