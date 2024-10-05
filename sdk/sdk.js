@@ -1,4 +1,6 @@
 (function () {
+    console.log('SDK loaded successfully');
+
     function log404Data(siteUrl, currentUrl, referrerUrl) {
         console.log("Base Website URL:", siteUrl);
         console.log("URL that caused 404 error:", currentUrl);
